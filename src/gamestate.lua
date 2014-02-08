@@ -1,5 +1,5 @@
 --[[
-Copyright (c) 2010-2011 Matthias Richter
+Copyright (c) 2010-2013 Matthias Richter
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,62 +26,68 @@ THE SOFTWARE.
 
 local function __NULL__() end
 
--- default gamestate produces error on every callback
-local function __ERROR__() error("Gamestate not initialized. Use Gamestate.switch()") end
-local current = setmetatable({leave = __NULL__}, {__index = __ERROR__})
+ -- default gamestate produces error on every callback
+local state_init = setmetatable({leave = __NULL__},
+		{__index = function() error("Gamestate not initialized. Use Gamestate.switch()") end})
+local stack = {state_init}
 
 local GS = {}
-function GS.new()
-	return {
-		init             = __NULL__,
-		enter            = __NULL__,
-		leave            = __NULL__,
-		update           = __NULL__,
-		draw             = __NULL__,
-		focus            = __NULL__,
-		keyreleased      = __NULL__,
-		keypressed       = __NULL__,
-		mousepressed     = __NULL__,
-		mousereleased    = __NULL__,
-		joystickpressed  = __NULL__,
-		joystickreleased = __NULL__,
-		quit             = __NULL__,
-	}
-end
+function GS.new(t) return t or {} end -- constructor - deprecated!
 
 function GS.switch(to, ...)
 	assert(to, "Missing argument: Gamestate to switch to")
-	current:leave()
-	local pre = current
-	to:init()
-	to.init = __NULL__
-	current = to
-	return current:enter(pre, ...)
+	local pre = stack[#stack]
+	;(pre.leave or __NULL__)(pre)
+	;(to.init or __NULL__)(to)
+	to.init = nil
+	stack[#stack] = to
+	return (to.enter or __NULL__)(to, pre, ...)
 end
 
--- holds all defined love callbacks after GS.registerEvents is called
--- returns empty function on undefined callback
-local registry = setmetatable({}, {__index = function() return __NULL__ end})
+function GS.push(to, ...)
+	assert(to, "Missing argument: Gamestate to switch to")
+	local pre = stack[#stack]
+	;(to.init or __NULL__)(to)
+	to.init = nil
+	stack[#stack+1] = to
+	return (to.enter or __NULL__)(to, pre, ...)
+end
+
+function GS.pop()
+	assert(#stack > 1, "No more states to pop!")
+	local pre = stack[#stack]
+	stack[#stack] = nil
+	return (pre.leave or __NULL__)(pre)
+end
+
+function GS.current()
+	return stack[#stack]
+end
 
 local all_callbacks = {
-	'update', 'draw', 'focus', 'keypressed', 'keyreleased',
-	'mousepressed', 'mousereleased', 'joystickpressed',
-	'joystickreleased', 'quit'
+	'draw', 'errhand', 'focus', 'keypressed', 'keyreleased', 'mousefocus',
+	'mousepressed', 'mousereleased', 'quit', 'resize', 'textinput',
+	'threaderror', 'update', 'visible', 'gamepadaxis', 'gamepadpressed', 'gamepadreleased',
+	'joystickadded', 'joystickaxis', 'joystickhat', 'joystickpressed',
+	'joystickreleased', 'joystickremoved'
 }
 
 function GS.registerEvents(callbacks)
+	local registry = {}
 	callbacks = callbacks or all_callbacks
 	for _, f in ipairs(callbacks) do
-		registry[f] = love[f]
-		love[f] = function(...) GS[f](...) end
+		registry[f] = love[f] or __NULL__
+		love[f] = function(...)
+			registry[f](...)
+			return GS[f](...)
+		end
 	end
 end
 
 -- forward any undefined functions
 setmetatable(GS, {__index = function(_, func)
 	return function(...)
-		registry[func](...)
-		current[func](current, ...)
+		return (stack[#stack][func] or __NULL__)(stack[#stack], ...)
 	end
 end})
 

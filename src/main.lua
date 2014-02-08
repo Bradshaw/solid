@@ -4,43 +4,117 @@ function love.load(arg)
 	gstate.switch(game)
 end
 
-
-function love.focus(f)
-	gstate.focus(f)
+function love.draw(...)
+	gstate.draw(...)
 end
 
-function love.mousepressed(x, y, btn)
-	gstate.mousepressed(x, y, btn)
+
+function love.errhand(...)
+	gstate.errhand(...)
 end
 
-function love.mousereleased(x, y, btn)
-	gstate.mousereleased(x, y, btn)
+
+function love.focus(...)
+	gstate.focus(...)
 end
 
-function love.joystickpressed(joystick, button)
-	gstate.joystickpressed(joystick, button)
+
+function love.keypressed(...)
+	gstate.keypressed(...)
 end
 
-function love.joystickreleased(joystick, button)
-	gstate.joystickreleased(joystick, button)
+
+function love.keyreleased(...)
+	gstate.keyreleased(...)
 end
 
-function love.quit()
-	gstate.quit()
+
+function love.mousefocus(...)
+	gstate.mousefocus(...)
 end
 
-function love.keypressed(key, uni)
-	gstate.keypressed(key, uni)
+
+function love.mousepressed(...)
+	gstate.mousepressed(...)
 end
 
-function keyreleased(key, uni)
-	gstate.keyreleased(key)
+
+function love.mousereleased(...)
+	gstate.mousereleased(...)
 end
 
-function love.update(dt)
-	gstate.update(dt)
+
+function love.quit(...)
+	gstate.quit(...)
 end
 
-function love.draw()
-	gstate.draw()
+
+function love.resize(...)
+	gstate.resize(...)
 end
+
+
+function love.textinput(...)
+	gstate.textinput(...)
+end
+
+
+function love.threaderror(...)
+	gstate.threaderror(...)
+end
+
+
+function love.update(...)
+	gstate.update(...)
+end
+
+
+function love.visible(...)
+	gstate.visible(...)
+end
+
+
+function love.gamepadaxis(...)
+	gstate.gamepadaxis(...)
+end
+
+
+function love.gamepadpressed(...)
+	gstate.gamepadpressed(...)
+end
+
+
+function love.gamepadreleased(...)
+	gstate.gamepadpressed(...)
+end
+
+
+function love.joystickadded(...)
+	gstate.joystickadded(...)
+end
+
+
+function love.joystickaxis(...)
+	gstate.joystickaxis(...)
+end
+
+
+function love.joystickhat(...)
+	gstate.joystickhat(...)
+end
+
+
+function love.joystickpressed(...)
+	gstate.joystickpressed(...)
+end
+
+
+function love.joystickreleased(...)
+	gstate.joystickreleased(...)
+end
+
+
+function love.joystickremoved(...)
+gstate.joystickremove(...)
+end
+
