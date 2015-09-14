@@ -21,6 +21,13 @@ function v2methods:magnitude()
 	return math.sqrt(self.x*self.x+self.y*self.y)
 end
 
+function v2methods:normalise()
+	local mag = self:magnitude()
+	self.x = self.x/mag
+	self.y = self.y/mag
+	return self
+end
+
 math.oldabs = math.abs
 function math.abs(v)
 	if type(v) == "table" and v.vector2 then
