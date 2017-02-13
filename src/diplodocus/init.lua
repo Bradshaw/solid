@@ -4,6 +4,7 @@ diplodocus.useful = require(current_folder.."/useful")
 diplodocus.query = require(current_folder.."/query")
 diplodocus.vector = require(current_folder.."/vector")
 diplodocus.event = require(current_folder.."/event")
+diplodocus.shade = require(current_folder.."/shade")
 
 
 

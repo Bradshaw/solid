@@ -7,6 +7,7 @@ end
 
 
 function state:enter( pre )
+	sh = diplodocus.shade()
 end
 
 
@@ -19,6 +20,19 @@ end
 
 
 function state:draw()
+	sh:setTarget()
+	local w = love.graphics.getWidth()
+	local h = love.graphics.getHeight()
+	love.graphics.rectangle("line", w/4, h/4, w/2, h/2)
+	love.graphics.line(w/4, h/4, 3*w/4, 3*h/4)
+	love.graphics.line(3*w/4, h/4, w/4, 3*h/4)
+
+	sh:prep()
+	sh:blur(0.03+math.sin(love.timer.getTime())*0.03)
+	sh:invert()
+	sh:release()
+
+	sh:pushToScreen()
 end
 
 
