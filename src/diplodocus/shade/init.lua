@@ -3,14 +3,15 @@ local frags = {
 	identity = love.graphics.newShader(current_folder.."/identity.fs"),
 	invert = love.graphics.newShader(current_folder.."/invert.fs"),
 	blurh = love.graphics.newShader(current_folder.."/blurh.fs"),
-	blurv = love.graphics.newShader(current_folder.."/blurv.fs")
+	blurv = love.graphics.newShader(current_folder.."/blurv.fs"),
+	glitch = love.graphics.newShader(current_folder.."/glitch.fs")
 }
 local shade_mt = {}
 local shade = setmetatable({},{
 	__call = function(_, img)
 		local self = setmetatable({},{__index = shade_mt})
-		self.a = img or love.graphics.newCanvas(love.graphics.getWidth(),love.graphics.getHeight())
-		self.b = love.graphics.newCanvas(self.a.width, self.a.height)
+		self.a = img --or love.graphics.newCanvas(love.graphics.getWidth(),love.graphics.getHeight())
+		self.b = love.graphics.newCanvas(img:getWidth(), img:getHeight())
 		self.state = {
 			prepped = false
 		}
@@ -26,13 +27,13 @@ function shade_mt:setTarget()
 	love.graphics.clear()
 end
 
-function shade_mt:pushToScreen()
+function shade_mt:pushToScreen(...)
 	if self.state.prepped then
 		self:release()
 	end
 	love.graphics.setCanvas()
 	love.graphics.origin()
-	love.graphics.draw(self.a)
+	love.graphics.draw(self.a,...)
 end
 
 function shade_mt:applySettings(settings)
@@ -127,6 +128,24 @@ function shade_mt:blur(dist, samples)
 end
 function shade_mt:invert()
 	self:process({shader = frags.invert})
+end
+function shade_mt:identity()
+	self:process({shader = frags.identity})
+end
+function shade_mt:glitch(noise)
+	self:process({
+		shader = frags.glitch,
+		settings = {
+			sw=sh.a:getWidth(),
+			sh=sh.a:getHeight(),
+			cw=sh.a:getWidth(),
+			ch=sh.a:getHeight(),
+			distort=0,
+			flip=-1,
+			time=(love.timer.getTime()%5)+10,
+			shimmer=noise or 1
+		}
+	})
 end
 
 

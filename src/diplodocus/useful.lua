@@ -15,15 +15,23 @@ local default_upairs_test = function(elem)
 	return (type(elem)=="table") and (elem.purge) or false
 end
 
-function useful.upairs(t, test)
+function useful.upairs(t, test, onPurge)
 	local index = 1
 	local iterator
+	local purged = {}
 	iterator = function(t)
 		if index>#t then
+			if onPurge then
+				for _,elem in ipairs(purged) do
+					onPurge(elem)
+				end
+			end
 			return nil
 		else
 			if (test or default_upairs_test)(t[index]) then
+				local elem = t[index]
 				table.remove(t, index)
+				table.insert(purged, elem)
 				return iterator(t)
 			else
 				index = index+1
@@ -43,6 +51,14 @@ function useful.dist2( x1, y1, x2, y2 )
 	else
 		return (x1*x1 + y1*y1)
 	end
+end
+
+function useful.sign(a)
+	return a < 0 and -1 or 1
+end
+
+function useful.lerp(a, b, t)
+	return b*t + a*(1-t)
 end
 
 function useful.dead(n, zone)
@@ -104,6 +120,44 @@ function useful.iterate(fn, it, ...)
 		return fn(useful.iterate(fn, it-1, ...))
 	else
 		return fn(...)
+	end
+end
+
+
+--[[
+
+
+]]
+function useful.copy(elem)
+	if type(elem)=="table" then
+		local copy = {}
+		for k, v in pairs(elem) do
+			copy[k] = useful.copy(v)
+		end
+	else
+		return elem
+	end
+end
+
+function useful.merge(to, from, clobber)
+	local insert = function(tab, key, elem)
+		if type(elem)=="table" then
+			if not tab[key] then
+				tab[key]={}
+			end
+			useful.merge(tab[key], elem, clobber)
+		else
+			tab[key]=elem
+		end
+	end
+	for k, v in pairs(from) do
+		if to[k] then
+			if clobber then
+				insert(to, k, v)
+			end
+		else
+			insert(to, k, v)
+		end
 	end
 end
 
