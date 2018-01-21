@@ -1,3 +1,10 @@
+--   .    .     .                        ._   .
+--  _|*._ | _  _| _  _.. . __   . . __ _ |,. .|
+-- (_]|[_)|(_)(_](_)(_.(_|_)  * (_|_) (/,| (_||
+--     |
+--
+-- diplodocus.useful is a collection of utility functions
+
 local useful = {}
 local ID = 0
 useful.tau = math.pi*2
@@ -128,6 +135,17 @@ end
 
 
 ]]
+
+function useful.shuffle(t)
+  for i = #t, 2, -1 do
+    local j = math.random(1, i)
+    local swap = t[i]
+    t[i] = t[j]
+    t[j] = swap
+  end
+  return t
+end
+
 function useful.copy(elem)
 	if type(elem)=="table" then
 		local copy = {}
@@ -159,6 +177,78 @@ function useful.merge(to, from, clobber)
 			insert(to, k, v)
 		end
 	end
+end
+
+
+
+
+function useful.lerpAngle(a,b,t)
+	local ax = math.cos(a)
+	local ay = math.sin(a)
+	local bx = math.cos(b)
+	local by = math.sin(b)
+	return math.atan2(useful.lerp(ay, by, t), useful.lerp(ax, bx, t))
+end
+
+function useful.hsv(H, S, V, A, div, max, ang)
+	local max = max or 255
+	local ang = ang or 360
+	local ang6 = ang/6
+	local r, g, b
+	local div = div or 100
+	local S = (S or div)/div
+	local V = (V or div)/div
+	local A = (A or div)/div * max
+	local H = H%ang
+	if H>=0 and H<=ang6 then
+		r = 1
+		g = H/ang6
+		b = 0
+	elseif H>ang6 and H<=2*ang6 then
+		r = 1 - (H-ang6)/ang6
+		g = 1
+		b = 0
+	elseif H>2*ang6 and H<=3*ang6 then
+		r = 0
+		g = 1
+		b = (H-2*ang6)/ang6
+	elseif H>180 and H <= 240 then
+		r = 0
+		g = 1- (H-3*ang6)/ang6
+		b = 1
+	elseif H>4*ang6 and H<= 5*ang6 then
+		r = (H-4*ang6)/ang6
+		g = 0
+		b = 1
+	else
+		r = 1
+		g = 0
+		b = 1 - (H-5*ang6)/ang6
+	end
+	local top = (V*max)
+	local bot = top - top*S
+	local dif = top - bot
+	r = bot + r*dif
+	g = bot + g*dif
+	b = bot + b*dif
+
+	return r, g, b, A
+end
+
+-- function missing from math
+function useful.round(x, n)
+  if n then
+    -- round to nearest n
+    return useful.round(x / n) * n
+  else
+    -- round to nearest integer
+    local floor = math.floor(x)
+    if (x - floor) < 0.5 then
+      return floor
+    else
+      return math.ceil(x)
+    end
+  end
 end
 
 return useful

@@ -1,3 +1,10 @@
+--   .    .     .                             ,
+--  _|*._ | _  _| _  _.. . __    _ .  , _ ._ -+-
+-- (_]|[_)|(_)(_](_)(_.(_|_)  * (/, \/ (/,[ ) |
+--     |
+--
+-- simple event system for simple needs
+
 local event_mt = {}
 local event = {}
 

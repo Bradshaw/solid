@@ -1,3 +1,10 @@
+--   .    .     .                  .       .
+--  _|*._ | _  _| _  _.. . __    __|_  _. _| _
+-- (_]|[_)|(_)(_](_)(_.(_|_)  * _) [ )(_](_](/,
+--     |
+--
+-- an attempt at a shader stack for Löve2d
+
 local current_folder = (...):gsub('%.init$', '')
 local frags = {
 	identity = love.graphics.newShader(current_folder.."/identity.fs"),
@@ -10,8 +17,8 @@ local shade_mt = {}
 local shade = setmetatable({},{
 	__call = function(_, img)
 		local self = setmetatable({},{__index = shade_mt})
-		self.a = img --or love.graphics.newCanvas(love.graphics.getWidth(),love.graphics.getHeight())
-		self.b = love.graphics.newCanvas(img:getWidth(), img:getHeight())
+		self.a = img or love.graphics.newCanvas(love.graphics.getWidth(),love.graphics.getHeight())
+		self.b = love.graphics.newCanvas(self.a:getWidth(), self.a:getHeight())
 		self.state = {
 			prepped = false
 		}

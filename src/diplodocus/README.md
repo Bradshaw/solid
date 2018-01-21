@@ -1,3 +1,8 @@
+```	  .    .     .
+	 _|*._ | _  _| _  _.. . __
+	(_]|[_)|(_)(_](_)(_.(_|_)
+	    | ```
+
 Diplodocus
 ==========
 
@@ -35,7 +40,8 @@ Cool shit includes:
 * ```useful.sign``` and ```useful.lerp``` which should have been in ```math``` all along
 * ```useful.copy``` for a dumb deep copy of tables
 * ```useful.nrandom``` for a normally-distributed random number generator
-* And more!
+* And more!  
+
 
 ## Vector
 

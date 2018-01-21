@@ -1,3 +1,20 @@
+--   .    .     .                , .
+--  _|*._ | _  _| _  _.. . __   -+-|_ *._  _
+-- (_]|[_)|(_)(_](_)(_.(_|_)  *  | [ )|[ )(_]
+--     |                                  ._|
+--
+-- diplodocus.thing is a simple system for collected objects
+--
+-- + call like `monkey = diplodocus.thing()` to create a new prototype
+-- + to create a new instance, call like `monkey.new()`
+-- + add new methods to the prototype like
+--		`function monkey.mt:doThing() --[[ STUFF ]] end`
+-- + add a method called `init`, it will be called on instanciation
+-- + `self.options` contains the parameter sent to `.new()`
+-- + call like `monkey.map.doThing()` to call a method on all instances
+--		this also removes "purged" instances (instances where .purge is set)
+--
+
 local thing = function(defaultOptions)
 	require("diplodocus")
 	local useful = diplodocus.useful

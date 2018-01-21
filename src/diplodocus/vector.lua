@@ -1,3 +1,9 @@
+--   .    .     .                          ,
+--  _|*._ | _  _| _  _.. . __   .  , _  _.-+- _ ._.
+-- (_]|[_)|(_)(_](_)(_.(_|_)  *  \/ (/,(_. | (_)[
+--     |
+-- diplodocus.vector is a simple 2d vector math library
+
 local vector = {}
 local v2methods = {}
 --local v3methods = {}
@@ -26,6 +32,10 @@ function v2methods:normalise()
 	self.x = self.x/mag
 	self.y = self.y/mag
 	return self
+end
+
+function v2methods:xy()
+	return self.x, self.y
 end
 
 math.oldabs = math.abs
