@@ -5,8 +5,6 @@
 	    |
 ```
 
-Diplodocus
-==========
 
 Diplodocus is a set of utilities for Löve2D and/or Lua   
 It's unfinished   
@@ -20,7 +18,6 @@ A little shader utility to make little shader stacks to easily apply screen effe
 ## Event
 
 A little eventing/messaging system   
-It's not done yet, it'll be done when I need it   
 
 ## Query
 
